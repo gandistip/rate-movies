@@ -23,8 +23,8 @@ public class User {
     }
 
     private void setNameIfEmpty() {
-        if(getName() == null || getName().isBlank()) {
-             setName(getLogin());
+        if (getName() == null || getName().isBlank()) {
+            setName(getLogin());
         }
     }
 }

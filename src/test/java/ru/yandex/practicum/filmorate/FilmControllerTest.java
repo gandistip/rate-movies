@@ -12,58 +12,58 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class FilmControllerTest {
-	private Film film;
-	private Film postFilm;
-	private LocalDate releaseDate = LocalDate.of(1995,12,28);
-	private FilmController filmController;
+    private Film film;
+    private Film postFilm;
+    private LocalDate releaseDate = LocalDate.of(1995, 12, 28);
+    private FilmController filmController;
 
-	@BeforeEach
-	public void newFilmAndController() {
-		filmController = new FilmController();
-	}
+    @BeforeEach
+    public void newFilmAndController() {
+        filmController = new FilmController();
+    }
 
-	@Test
-	public void postFilm() throws ValidationException {
-		film = Film.builder().name("название").description("описание").releaseDate(releaseDate).duration(99).build();
-		postFilm = filmController.create(film);
-		assertEquals(film, postFilm, "Ошибка добавления фильма");
-		assertEquals(1, filmController.getAll().size(), "Количество фильмов не совпадает");
-	}
+    @Test
+    public void postFilm() throws ValidationException {
+        film = Film.builder().name("название").description("описание").releaseDate(releaseDate).duration(99).build();
+        postFilm = filmController.create(film);
+        assertEquals(film, postFilm, "Ошибка добавления фильма");
+        assertEquals(1, filmController.getAll().size(), "Количество фильмов не совпадает");
+    }
 
-	@Test
-	public void postEmptyFilm() {
-		film = null;
-		assertThrows(ValidationException.class, ()-> filmController.create(film));
-	}
+    @Test
+    public void postEmptyFilm() {
+        film = null;
+        assertThrows(ValidationException.class, () -> filmController.create(film));
+    }
 
-	@Test
-	public void postFilmWithoutName() {
-		film = Film.builder().name("").description("описание").releaseDate(releaseDate).duration(99).build();
-		assertThrows(ValidationException.class, ()-> filmController.create(film));
+    @Test
+    public void postFilmWithoutName() {
+        film = Film.builder().name("").description("описание").releaseDate(releaseDate).duration(99).build();
+        assertThrows(ValidationException.class, () -> filmController.create(film));
 
-		film = Film.builder().name(null).description("описание").releaseDate(releaseDate).duration(99).build();
-		assertThrows(ValidationException.class, ()-> filmController.create(film));
+        film = Film.builder().name(null).description("описание").releaseDate(releaseDate).duration(99).build();
+        assertThrows(ValidationException.class, () -> filmController.create(film));
 
-		film = Film.builder().description("описание").releaseDate(releaseDate).duration(99).build();
-		assertThrows(ValidationException.class, ()-> filmController.create(film));
-	}
+        film = Film.builder().description("описание").releaseDate(releaseDate).duration(99).build();
+        assertThrows(ValidationException.class, () -> filmController.create(film));
+    }
 
-	@Test
-	public void postFilmWithoutDescription() throws ValidationException {
-		film = Film.builder().name("название").description("").releaseDate(releaseDate).duration(99).build();
-		postFilm = filmController.create(film);
-		assertEquals(film, postFilm, "Ошибка добавления фильма");
-		assertEquals(1, filmController.getAll().size(), "Количество фильмов не совпадает");
+    @Test
+    public void postFilmWithoutDescription() throws ValidationException {
+        film = Film.builder().name("название").description("").releaseDate(releaseDate).duration(99).build();
+        postFilm = filmController.create(film);
+        assertEquals(film, postFilm, "Ошибка добавления фильма");
+        assertEquals(1, filmController.getAll().size(), "Количество фильмов не совпадает");
 
-		film = Film.builder().name("название2").description(null).releaseDate(releaseDate).duration(99).build();
-		postFilm = filmController.create(film);
-		assertEquals(film, postFilm, "Ошибка добавления фильма");
-		assertEquals(2, filmController.getAll().size(), "Количество фильмов не совпадает");
+        film = Film.builder().name("название2").description(null).releaseDate(releaseDate).duration(99).build();
+        postFilm = filmController.create(film);
+        assertEquals(film, postFilm, "Ошибка добавления фильма");
+        assertEquals(2, filmController.getAll().size(), "Количество фильмов не совпадает");
 
-		film = Film.builder().name("название3").releaseDate(releaseDate).duration(99).build();
-		postFilm = filmController.create(film);
-		assertEquals(film, postFilm, "Ошибка добавления фильма");
-		assertEquals(3, filmController.getAll().size(), "Количество фильмов не совпадает");
-	}
+        film = Film.builder().name("название3").releaseDate(releaseDate).duration(99).build();
+        postFilm = filmController.create(film);
+        assertEquals(film, postFilm, "Ошибка добавления фильма");
+        assertEquals(3, filmController.getAll().size(), "Количество фильмов не совпадает");
+    }
 
 }

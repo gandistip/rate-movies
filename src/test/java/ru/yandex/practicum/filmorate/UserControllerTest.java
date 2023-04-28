@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class UserControllerTest {
     private User user;
     private User postUser;
-    private LocalDate birthday = LocalDate.of(1995,12,28);
+    private LocalDate birthday = LocalDate.of(1995, 12, 28);
     private UserController userController;
 
     @BeforeEach
@@ -33,19 +33,19 @@ class UserControllerTest {
     @Test
     public void postEmptyUser() {
         user = null;
-        assertThrows(ValidationException.class, ()-> userController.create(user));
+        assertThrows(ValidationException.class, () -> userController.create(user));
     }
 
     @Test
     public void postUserWithoutEmail() {
         user = User.builder().email("").login("кличка").name("имя").birthday(birthday).build();
-        assertThrows(ValidationException.class, ()-> userController.create(user));
+        assertThrows(ValidationException.class, () -> userController.create(user));
 
         user = User.builder().email(null).login("кличка").name("имя").birthday(birthday).build();
-        assertThrows(ValidationException.class, ()-> userController.create(user));
+        assertThrows(ValidationException.class, () -> userController.create(user));
 
         user = User.builder().login("кличка").name("имя").birthday(birthday).build();
-        assertThrows(ValidationException.class, ()-> userController.create(user));
+        assertThrows(ValidationException.class, () -> userController.create(user));
     }
 
     @Test
