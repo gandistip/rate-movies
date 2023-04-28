@@ -30,10 +30,12 @@ public class UserException {
             throw new ValidationException("Логин не может содержать пробел.");
         }
         try {
-            if(user.getBirthday().isAfter(LocalDate.now())) {
+            if (user.getBirthday().isAfter(LocalDate.now())) {
                 log.debug("ValidationException");
                 throw new ValidationException("Дата рождения не может быть в будущем.");
             }
-        } catch (NullPointerException e) { System.out.println("NPE"); }
+        } catch (NullPointerException e) {
+            System.out.println("NPE");
+        }
     }
 }
