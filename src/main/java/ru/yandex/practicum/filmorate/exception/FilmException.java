@@ -17,29 +17,23 @@ public class FilmException {
             log.debug("ValidationException");
             throw new ValidationException("Название фильма не может быть пустым.");
         }
-        try {
+        if (film.getDescription() != null) {
             if (film.getDescription().length() > 200) {
                 log.debug("ValidationException");
                 throw new ValidationException("Максимальная длина описания фильма — 200 символов.");
             }
-        } catch (NullPointerException e) {
-            System.out.println("NPE");
         }
-        try {
+        if (film.getReleaseDate() != null) {
             if (film.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28))) {
                 log.debug("ValidationException");
                 throw new ValidationException("Дата релиза фильма не может быть раньше 28.12.1895 года.");
             }
-        } catch (NullPointerException e) {
-            System.out.println("NPE");
         }
-        try {
+        if (film.getDuration() != null) {
             if (film.getDuration() <= 0) {
                 log.debug("ValidationException");
                 throw new ValidationException("Продолжительность фильма должна быть положительной.");
             }
-        } catch (NullPointerException e) {
-            System.out.println("NPE");
         }
     }
 }
