@@ -2,7 +2,6 @@ package ru.yandex.practicum.filmorate.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
@@ -53,7 +52,7 @@ public class FilmService {
                 .collect(Collectors.toList());
     }
 
-    public Film findFilmById(@PathVariable Integer id) {
+    public Film findFilmById(Integer id) {
         return filmStorage.findFilmById(id);
     }
 
