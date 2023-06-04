@@ -23,15 +23,14 @@ public class InMemoryUserStorage implements UserStorage {
 
     public User create(User user) throws ValidationException {
         UserValidationException.validationException(user);
+        user.setId(++userId);
         for (User u : users.values()) {
             if (u.getEmail().equals(user.getEmail())) {
                 log.debug("ValidationException");
                 throw new ValidationException("Пользователь уже есть в базе.");
             }
         }
-        user.setId(++userId);
         users.put(userId, user);
-        log.info("Получен запрос POST /users");
         return user;
     }
 
@@ -42,7 +41,6 @@ public class InMemoryUserStorage implements UserStorage {
             throw new UserNotFoundException("Пользователя с таким ID нет в базе.");
         }
         users.put(user.getId(), user);
-        log.info("Получен запрос PUT /users");
         return user;
     }
 

@@ -27,15 +27,12 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     public Film create(Film film) throws ValidationException {
         FilmValidationException.validationException(film);
-        for (Film f : films.values()) {
-            if (f.equals(film)) {
-                log.debug("ValidationException");
-                throw new ValidationException("Фильм уже есть в базе.");
-            }
-        }
         film.setId(++filmId);
+        if (films.containsKey(film.getId())) {
+            log.debug("ValidationException");
+            throw new ValidationException("Фильм уже есть в базе.");
+        }
         films.put(filmId, film);
-        log.info("Получен запрос POST /films");
         return film;
     }
 
@@ -46,7 +43,6 @@ public class InMemoryFilmStorage implements FilmStorage {
             throw new FilmNotFoundException("Фильма с таким id нет в базе.");
         }
         films.put(film.getId(), film);
-        log.info("Получен запрос PUT /films");
         return film;
     }
 
