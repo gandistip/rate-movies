@@ -1,13 +1,14 @@
-package ru.yandex.practicum.filmorate.exception;
+package ru.yandex.practicum.filmorate.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestBody;
+import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import java.time.LocalDate;
 
 @Slf4j
-public class FilmException {
+public class FilmValidationException {
     public static void validationException(@RequestBody Film film) throws ValidationException {
         if (film == null) {
             log.debug("ValidationException");

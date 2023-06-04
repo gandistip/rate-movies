@@ -1,50 +1,59 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.exception.FilmException;
+import ru.yandex.practicum.filmorate.exception.IncorrectParameterException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.service.FilmService;
 
 import java.util.*;
 
 @RestController
-@RequestMapping("/films")
+@RequiredArgsConstructor
 @Slf4j
 public class FilmController {
-    private int count;
-    private final Map<Integer, Film> films = new HashMap<>();
+    private final FilmService filmService;
 
-    @GetMapping
-    public Collection<Film> getAll() {
-        return films.values();
-    }
-
-    @PostMapping
+    @PostMapping("/films")
     public Film create(@RequestBody Film film) throws ValidationException {
-        FilmException.validationException(film);
-        for (Film f: films.values()) {
-            if (f.equals(film)) {
-                log.debug("ValidationException");
-                throw new ValidationException("Фильм уже есть в базе.");
-            }
-        }
-        film.setId(++count);
-        films.put(count, film);
-        log.info("Получен запрос POST /films");
-        return film;
+        return filmService.create(film);
     }
 
-    @PutMapping
+    @PutMapping("/films")
     public Film put(@RequestBody Film film) throws ValidationException {
-        FilmException.validationException(film);
-        if (!films.containsKey(film.getId())) {
-            log.debug("ValidationException");
-            throw new ValidationException("Фильма с таким ID нет в базе.");
+        return filmService.put(film);
+    }
+
+    @PutMapping("/films/{id}/like/{userId}")
+    public void addLike(@PathVariable("id") Integer id,
+                        @PathVariable("userId") Integer userId) {
+        filmService.addLike(id, userId);
+    }
+
+    @DeleteMapping("/films/{id}/like/{userId}")
+    public void delLike(@PathVariable("id") Integer id,
+                        @PathVariable("userId") Integer userId) {
+        filmService.delLike(id, userId);
+    }
+
+    @GetMapping("/films")
+    public Collection<Film> getAll() {
+        return filmService.getAll();
+    }
+
+    @GetMapping("/films/{id}")
+    public Film findFilmById(@PathVariable("id") Integer id) {
+        return filmService.findFilmById(id);
+    }
+
+    @GetMapping("/films/popular")
+    public List<Film> getTopFilms(@RequestParam(defaultValue = "10", required = false) Integer count) throws IncorrectParameterException {
+        if (count <= 0) {
+            throw new IncorrectParameterException("count");
         }
-        films.put(film.getId(), film);
-        log.info("Получен запрос PUT /films");
-        return film;
+        return filmService.getTopFilms(count);
     }
 
 }
