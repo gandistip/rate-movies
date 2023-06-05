@@ -7,9 +7,7 @@ import ru.yandex.practicum.filmorate.service.UserValidationException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Component
 @Slf4j
@@ -17,10 +15,12 @@ public class InMemoryUserStorage implements UserStorage {
     private Integer userId = 0;
     private final Map<Integer, User> users = new HashMap<>();
 
+    @Override
     public Collection<User> getAll() {
         return users.values();
     }
 
+    @Override
     public User create(User user) throws ValidationException {
         UserValidationException.validationException(user);
         user.setId(++userId);
@@ -34,6 +34,7 @@ public class InMemoryUserStorage implements UserStorage {
         return user;
     }
 
+    @Override
     public User put(User user) throws ValidationException {
         UserValidationException.validationException(user);
         if (!users.containsKey(user.getId())) {
@@ -44,6 +45,7 @@ public class InMemoryUserStorage implements UserStorage {
         return user;
     }
 
+    @Override
     public User findUserById(Integer userId) {
         if (userId == null || userId <= 0) {
             throw new UserNotFoundException(String.format("Передан null или отрицательный id пользователя"));
@@ -54,5 +56,15 @@ public class InMemoryUserStorage implements UserStorage {
             throw new UserNotFoundException(String.format("Пользователь с id %d не найден", userId));
         }
         return user;
+    }
+
+    @Override
+    public List<User> getFriends(Integer id) {
+        List<User> friends = new ArrayList<>();
+        Set<Integer> friendsId = findUserById(id).getFriends();
+        for (Integer friendId : friendsId) {
+            friends.add(findUserById(friendId));
+        }
+        return friends;
     }
 }

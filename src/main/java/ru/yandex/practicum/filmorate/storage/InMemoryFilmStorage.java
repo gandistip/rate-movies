@@ -21,10 +21,12 @@ public class InMemoryFilmStorage implements FilmStorage {
     private Integer filmId = 0;
     private final Map<Integer, Film> films = new HashMap<>();
 
+    @Override
     public Collection<Film> getAll() {
         return films.values();
     }
 
+    @Override
     public Film create(Film film) throws ValidationException {
         FilmValidationException.validationException(film);
         film.setId(++filmId);
@@ -36,6 +38,7 @@ public class InMemoryFilmStorage implements FilmStorage {
         return film;
     }
 
+    @Override
     public Film put(Film film) throws ValidationException {
         FilmValidationException.validationException(film);
         if (!films.containsKey(film.getId())) {
@@ -46,6 +49,7 @@ public class InMemoryFilmStorage implements FilmStorage {
         return film;
     }
 
+    @Override
     public Film findFilmById(Integer filmId) {
         if (filmId == null || filmId <= 0) {
             throw new FilmNotFoundException(String.format("Передан null или отрицательный id фильма"));
@@ -57,6 +61,7 @@ public class InMemoryFilmStorage implements FilmStorage {
         return film;
     }
 
+    @Override
     public User findUserById(Integer userId) {
         return userStorage.findUserById(userId);
     }
