@@ -1,16 +1,18 @@
-package ru.yandex.practicum.filmorate.storage;
+package ru.yandex.practicum.filmorate.storage.memory;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.FilmNotFoundException;
-import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.service.FilmValidationException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.service.FilmValidationException;
+import ru.yandex.practicum.filmorate.storage.FilmStorage;
+import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -50,6 +52,11 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     @Override
+    public void del(Integer id) {
+
+    }
+
+    @Override
     public Film findFilmById(Integer filmId) {
         if (filmId == null || filmId <= 0) {
             throw new FilmNotFoundException(String.format("Передан null или отрицательный id фильма"));
@@ -62,8 +69,23 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     @Override
-    public User findUserById(Integer userId) {
-        return userStorage.findUserById(userId);
+    public void addLike(Integer filmId, Integer userId) {
+
+    }
+
+    @Override
+    public void delLike(Integer filmId, Integer userId) {
+
+    }
+
+    @Override
+    public List<Integer> getLikes(int filmId) {
+        return null;
+    }
+
+    @Override
+    public List<Film> getTopFilms(Integer count) {
+        return null;
     }
 
 }

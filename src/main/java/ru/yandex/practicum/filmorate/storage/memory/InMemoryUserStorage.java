@@ -1,11 +1,11 @@
-package ru.yandex.practicum.filmorate.storage;
+package ru.yandex.practicum.filmorate.storage.memory;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
-import ru.yandex.practicum.filmorate.service.UserValidationException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.util.*;
 
@@ -22,7 +22,6 @@ public class InMemoryUserStorage implements UserStorage {
 
     @Override
     public User create(User user) throws ValidationException {
-        UserValidationException.validationException(user);
         user.setId(++userId);
         for (User u : users.values()) {
             if (u.getEmail().equals(user.getEmail())) {
@@ -35,14 +34,26 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public User put(User user) throws ValidationException {
-        UserValidationException.validationException(user);
+    public User put(User user) {
         if (!users.containsKey(user.getId())) {
             log.debug("UserNotFoundException");
             throw new UserNotFoundException("Пользователя с таким ID нет в базе.");
         }
         users.put(user.getId(), user);
         return user;
+    }
+
+    @Override
+    public void addFriend(Integer id, Integer friendId) {
+    }
+
+    @Override
+    public void delFriend(Integer id, Integer friendId) {
+    }
+
+    @Override
+    public void del(Integer id) {
+
     }
 
     @Override

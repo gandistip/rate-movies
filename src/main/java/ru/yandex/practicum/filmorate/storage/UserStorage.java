@@ -13,7 +13,14 @@ public interface UserStorage {
 
     User put(User user) throws ValidationException;
 
+    void addFriend(Integer id, Integer friendId);
+
+    void delFriend(Integer id, Integer friendId);
+
+    void del(Integer id);
+
     User findUserById(Integer id);
 
     List<User> getFriends(Integer id);
+
 }
