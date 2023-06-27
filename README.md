@@ -1,4 +1,4 @@
 # java-filmorate
 Template repository for Filmorate project.
 Схема БД:
-[](db/dbSchema.png)
+![](src/main/resources/dbSchema.png)
