@@ -3,16 +3,21 @@ package ru.yandex.practicum.filmorate.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class UserService {
+
     private final UserStorage userStorage;
 
     public Collection<User> getAll() {
@@ -22,44 +27,30 @@ public class UserService {
 
     public User create(User user) throws ValidationException {
         log.info("Создание пользователя: {}", user);
+        UserValidationException.validationException(user);
         return userStorage.create(user);
     }
 
     public User put(User user) throws ValidationException {
         log.info("Обновление пользователя: {}", user);
+        UserValidationException.validationException(user);
         return userStorage.put(user);
     }
 
     public void addFriend(Integer id, Integer friendId) throws ValidationException {
         log.info("Добавление друга: {} пользователем: {}", friendId, id);
-        User user = userStorage.findUserById(id);
-        User friend = userStorage.findUserById(friendId);
-
-        Set<Integer> userFriends = user.getFriends();
-        userFriends.add(friendId);
-        user.setFriends(userFriends);
-        userStorage.put(user);
-
-        Set<Integer> friendUsers = friend.getFriends();
-        friendUsers.add(id);
-        friend.setFriends(friendUsers);
-        userStorage.put(friend);
+        if (id == null || id <= 0 || friendId == null || friendId <= 0) {
+            throw new UserNotFoundException(String.format("Передан null или отрицательный id пользователя"));
+        }
+        userStorage.addFriend(id, friendId);
     }
 
     public void delFriend(Integer id, Integer friendId) throws ValidationException {
         log.info("Удаление друга: {} пользователем: {}", friendId, id);
-        User user = userStorage.findUserById(id);
-        User friend = userStorage.findUserById(friendId);
-
-        Set<Integer> userFriends = user.getFriends();
-        userFriends.remove(friendId);
-        user.setFriends(userFriends);
-        userStorage.put(user);
-
-        Set<Integer> friendUsers = friend.getFriends();
-        friendUsers.remove(id);
-        friend.setFriends(friendUsers);
-        userStorage.put(friend);
+        if (id == null || id <= 0 || friendId == null || friendId <= 0) {
+            throw new UserNotFoundException(String.format("Передан null или отрицательный id пользователя"));
+        }
+        userStorage.delFriend(id, friendId);
     }
 
     public List<User> getFriends(Integer id) {

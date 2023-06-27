@@ -8,7 +8,8 @@ import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -59,5 +60,6 @@ public class FilmController {
         log.info("Получен запрос GET /films/popular");
         return filmService.getTopFilms(count);
     }
+
 
 }

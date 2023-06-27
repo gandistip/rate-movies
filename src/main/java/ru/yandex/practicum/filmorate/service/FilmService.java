@@ -4,14 +4,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.IncorrectParameterException;
+import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,30 +26,30 @@ public class FilmService {
 
     public Film create(Film film) throws ValidationException {
         log.info("Сохранение фильма: {}", film);
+        FilmValidationException.validationException(film);
         return filmStorage.create(film);
     }
 
     public Film put(Film film) throws ValidationException {
         log.info("Обновление фильма: {}", film);
+        FilmValidationException.validationException(film);
         return filmStorage.put(film);
     }
 
     public void addLike(Integer filmId, Integer userId) {
         log.info("Добавление лайка пользователем: {}, к фильму {}", userId, filmId);
-        Film film = filmStorage.findFilmById(filmId);
-        User user = filmStorage.findUserById(userId);
-        Set<String> likes = film.getLikes();
-        likes.add(user.getEmail());
-        film.setLikes(likes);
+        if (userId == null || userId <= 0 || filmId == null || filmId <= 0) {
+            throw new UserNotFoundException(String.format("Передан null или отрицательный id"));
+        }
+        filmStorage.addLike(filmId, userId);
     }
 
     public void delLike(Integer filmId, Integer userId) {
         log.info("Удаление лайка пользователем: {}, к фильму {}", userId, filmId);
-        Film film = filmStorage.findFilmById(filmId);
-        User user = filmStorage.findUserById(userId);
-        Set<String> likes = film.getLikes();
-        likes.remove(user.getEmail());
-        film.setLikes(likes);
+        if (userId == null || userId <= 0 || filmId == null || filmId <= 0) {
+            throw new UserNotFoundException(String.format("Передан null или отрицательный id"));
+        }
+        filmStorage.delLike(filmId, userId);
     }
 
     public List<Film> getTopFilms(Integer count) {
