@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.storage.db;
+package ru.yandex.practicum.filmorate.storage;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Primary;
@@ -11,7 +11,6 @@ import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.Mpa;
-import ru.yandex.practicum.filmorate.storage.FilmStorage;
 
 import java.sql.*;
 import java.util.Collection;
@@ -22,6 +21,7 @@ import java.util.List;
 @Primary
 @Slf4j
 public class FilmDbStorage implements FilmStorage {
+
     private final JdbcTemplate jdbcTemplate;
 
     public FilmDbStorage(JdbcTemplate jdbcTemplate) {
@@ -141,11 +141,19 @@ public class FilmDbStorage implements FilmStorage {
                         .build())
                 .build();
         film.setId(rs.getInt("id"));
-        String sqlGenre = "SELECT * FROM film_genre fg JOIN genre g ON fg.genre_id=g.id WHERE film_id = ?";
-        String sqlLike = "SELECT * FROM film_like WHERE film_id = ?";
-        film.setGenres(new HashSet<>(jdbcTemplate.query(sqlGenre, this::mapRowToGenre, film.getId())));
-        film.setLikes(jdbcTemplate.query(sqlLike, this::mapRowToLike, film.getId()));
+        film.setGenres(getGenre(film.getId()));
+        film.setLikes(getLike(film.getId()));
         return film;
+    }
+
+    private HashSet<Genre> getGenre(Integer filmId) {
+        String sqlGenre = "SELECT * FROM film_genre fg JOIN genre g ON fg.genre_id=g.id WHERE film_id = ?";
+        return new HashSet<>(jdbcTemplate.query(sqlGenre, this::mapRowToGenre, filmId));
+    }
+
+    private List<Integer> getLike(Integer filmId) {
+        String sqlLike = "SELECT * FROM film_like WHERE film_id = ?";
+        return jdbcTemplate.query(sqlLike, this::mapRowToLike, filmId);
     }
 
     private Genre mapRowToGenre(ResultSet rs, int rowNum) throws SQLException {
