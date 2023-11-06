@@ -6,3 +6,6 @@
 
 ## Схема БД:
 ![](src/main/resources/dbSchema.png)
+
+## Postman тесты
+https://github.com/gandistip/rate-movies/blob/main/postman%20/tests.json
